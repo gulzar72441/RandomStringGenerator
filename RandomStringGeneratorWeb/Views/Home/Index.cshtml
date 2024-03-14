@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <h1>Generate Random Strings</h1>
+    <form id="random-string-form">
+        <div class="form-group">
+            <label for="numberOfStrings">Generate how many strings:</label>
+            <input type="number" class="form-control" id="NumberOfStrings" name="numberOfStrings" min="1" required>
+        </div>
+        <div class="form-group">
+            <label for="NumberOfCharacters">Each string should be:</label>
+            <input type="number" class="form-control" id="NumberOfCharacters" name="NumberOfCharacters" min="1" required>
+        </div>
+        <h4>
+            Which characters are allowed to occur in the strings?
+        </h4>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="AllowNumericDigits" name="AllowNumericDigits">
+            <label class="form-check-label" for="AllowNumericDigits">
+                Numeric digits (0-9)
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="AllowUppercaseLetters" name="AllowUppercaseLetters">
+            <label class="form-check-label" for="AllowUppercaseLetters">
+                Uppercase letters (A-Z)
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="AllowLowercaseLetters" name="AllowLowercaseLetters">
+            <label class="form-check-label" for="AllowLowercaseLetters">
+                Lowercase letters (a-z)
+            </label>
+        </div>
+        <h4>
+            Do you want each string to be unique?
+        </h4>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="UniqueStrings" id="UniqueStrings">
+            <label class="form-check-label" for="UniqueStrings">
+                Each string should be unique
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="IdenticalStringsAllow" id="IdenticalStringsAllow">
+            <label class="form-check-label" for="IdenticalStringsAllow">
+                Identical strings are allowed
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Get Strings</button>
+        <button type="reset" class="btn btn-secondary">Reset Form</button>
+    </form>
+
+    <div id="generated-strings">
+
+    </div>
+</div>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function GetAntiToken() {
+        var token = '@Html.AntiForgeryToken()';
+        token = $(token).val();
+        return token;
+    }
+$(document).ready(function () {
+        $('#random-string-form').submit(function (e) {
+            e.preventDefault(); // Prevent form submission
+            var formData = new FormData();
+          
+            formData.append('NumberOfStrings', $('#NumberOfStrings').val());
+            formData.append('NumberOfCharacters', $('#NumberOfCharacters').val());
+            formData.append('AllowNumericDigits', $('#AllowNumericDigits').prop('checked'));
+            formData.append('AllowUppercaseLetters', $('#AllowUppercaseLetters').prop('checked'));
+            formData.append('AllowLowercaseLetters', $('#AllowLowercaseLetters').prop('checked'));
+            formData.append('UniqueStrings', $('#UniqueStrings').prop('checked'));
+            formData.append('IdenticalStringsAllow', $('#IdenticalStringsAllow').prop('checked'));
+
+            var token = GetAntiToken();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GenerateRandomStrings", "Home")',
+                contentType: false,
+                processData:false,
+                data: formData,
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function (response) {
+                    // Handle successful response
+                    var generatedStringsHtml = '<h2>Generated Strings:</h2><ul>';
+                    response.forEach(function (str) {
+                        generatedStringsHtml += '<li>' + str + '</li>';
+                    });
+                    generatedStringsHtml += '</ul>';
+                    $('#generated-strings').html(generatedStringsHtml);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+});
+
+    $('#reset-form').click(function () {
+        $('#NumberOfStrings').val('');
+        $('#NumberOfCharacters').val('');
+        $('#AllowNumericDigits').prop('checked', false);
+        $('#AllowUppercaseLetters').prop('checked', false);
+        $('#AllowLowercaseLetters').prop('checked', false);
+        $('#UniqueStrings').prop('checked', false);
+        $('#IdenticalStringsAllow').prop('checked', false);
+        $('#generated-strings').html('');
+    });
+</script>
+
