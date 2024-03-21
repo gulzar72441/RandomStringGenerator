@@ -8,7 +8,7 @@ namespace RandomStringGeneratorApi.Models
     public class RandomString
     {
         public int Id { get; set; }
-        public string Value { get; set; }
+        public string Randaom { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

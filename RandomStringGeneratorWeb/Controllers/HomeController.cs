@@ -38,7 +38,8 @@ namespace RandomStringGeneratorWeb.Controllers
                 AllowUppercaseLetters = formData.AllowUppercaseLetters,
                 AllowLowercaseLetters = formData.AllowLowercaseLetters,
                 UniqueStrings = formData.UniqueStrings,
-                IdenticalStringsAllow = formData.IdenticalStringsAllow
+                IdenticalStringsAllow = formData.IdenticalStringsAllow,
+                AllowSpecialLetters = formData.AllowSpecialLetters
             };
             var apiUrl = "https://localhost:44345/api/RandomStrings"; // Replace with your API endpoint
             try
@@ -72,7 +73,39 @@ namespace RandomStringGeneratorWeb.Controllers
             }
 
         }
+        [HttpGet]
+        public async Task<IActionResult> GenerateStrings()
+        {
+            var _httpClient = new HttpClient();
+            var apiUrl = "https://localhost:44345/api/RandomStrings/getstrings"; // Replace with your API endpoint
+            try
+            {
+                var response = await _httpClient.GetAsync(apiUrl);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read response content as string
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    // Deserialize JSON response
+                    var responseData = JsonSerializer.Deserialize<List<string>>(responseContent);
+
+                    return Json(responseData);
+                }
+                else
+                {
+                    return BadRequest("Failed to generate random strings");
+                }
+
+                // Return response data
+
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log the exception or handle it as needed
+                return BadRequest("Failed to communicate with the external API.");
+            }
+        }
         public IActionResult Privacy()
         {
             return View();

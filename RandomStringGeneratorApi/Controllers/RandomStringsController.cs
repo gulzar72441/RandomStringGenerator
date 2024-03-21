@@ -36,6 +36,9 @@ namespace RandomStringGeneratorApi.Controllers
 
                 if (request.AllowUppercaseLetters)
                     allowedChars.Append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                
+                if (request.AllowSpecialLetters)
+                    allowedChars.Append("#$&*^@)(&*&");
 
                 if (request.AllowLowercaseLetters)
                     allowedChars.Append("abcdefghijklmnopqrstuvwxyz");
@@ -44,13 +47,22 @@ namespace RandomStringGeneratorApi.Controllers
 
                 if (!request.UniqueStrings)
                 {
+                    try
+                    {
                     foreach (var item in strings)
                     {
-                        _context.Add(new RandomString
+                       var row = _context.Add(new RandomString
                         {
-                            Value = item,
+                            Randaom = item,
                             CreatedAt = DateTime.Now
                         });
+                    }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
                     }
                     return Ok(strings);
                 }
@@ -60,7 +72,7 @@ namespace RandomStringGeneratorApi.Controllers
                     {
                         _context.Add(new RandomString
                         {
-                            Value = item,
+                            Randaom = item,
                             CreatedAt = DateTime.Now
                         });
                     }
@@ -79,6 +91,21 @@ namespace RandomStringGeneratorApi.Controllers
         {
             return new string(Enumerable.Range(0, length)
                 .Select(_ => allowedChars[random.Next(allowedChars.Length)]).ToArray());
+        }
+
+        [HttpGet("getstrings")]
+        public IActionResult GetStrings()
+        {
+            var result = _context.RandomString.Select(x=>x.Randaom).ToList();
+
+            if (result.Count > 0)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace RandomStringGeneratorApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Value")
+                    b.Property<string>("Randaom")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

@@ -10,8 +10,8 @@ using RandomStringGeneratorApi.DataBaseContext;
 namespace RandomStringGeneratorApi.Migrations
 {
     [DbContext(typeof(RandomStringContext))]
-    [Migration("20240314184633_Migration1")]
-    partial class Migration1
+    [Migration("20240321184447_inital")]
+    partial class inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,7 +31,7 @@ namespace RandomStringGeneratorApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Value")
+                    b.Property<string>("Randaom")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

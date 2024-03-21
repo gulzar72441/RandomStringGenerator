@@ -11,6 +11,7 @@ namespace RandomStringGeneratorApi.Models
         public int NumberOfCharacters { get; set; }
         public bool AllowNumericDigits { get; set; }
         public bool AllowUppercaseLetters { get; set; }
+        public bool AllowSpecialLetters { get; set; }
         public bool AllowLowercaseLetters { get; set; }
         public bool UniqueStrings { get; set; }
         public bool IdenticalStringsAllow { get; set; }

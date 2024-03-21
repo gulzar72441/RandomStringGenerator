@@ -34,6 +34,12 @@
                 Lowercase letters (a-z)
             </label>
         </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="AllowSpecialLetters" name="AllowSpecialLetters">
+            <label class="form-check-label" for="AllowSpecialLetters">
+                Special letters (&,*,$)
+            </label>
+        </div>
         <h4>
             Do you want each string to be unique?
         </h4>
@@ -52,7 +58,7 @@
         <button type="submit" class="btn btn-primary">Get Strings</button>
         <button type="reset" class="btn btn-secondary">Reset Form</button>
     </form>
-
+   <a id="history">View History</a>
     <div id="generated-strings">
 
     </div>
@@ -74,7 +80,7 @@ $(document).ready(function () {
         $('#random-string-form').submit(function (e) {
             e.preventDefault(); // Prevent form submission
             var formData = new FormData();
-          
+
             formData.append('NumberOfStrings', $('#NumberOfStrings').val());
             formData.append('NumberOfCharacters', $('#NumberOfCharacters').val());
             formData.append('AllowNumericDigits', $('#AllowNumericDigits').prop('checked'));
@@ -82,7 +88,7 @@ $(document).ready(function () {
             formData.append('AllowLowercaseLetters', $('#AllowLowercaseLetters').prop('checked'));
             formData.append('UniqueStrings', $('#UniqueStrings').prop('checked'));
             formData.append('IdenticalStringsAllow', $('#IdenticalStringsAllow').prop('checked'));
-
+            formData.append('AllowSpecialLetters', $('#AllowSpecialLetters').prop('checked'));
             var token = GetAntiToken();
             $.ajax({
                 type: 'POST',
@@ -120,5 +126,28 @@ $(document).ready(function () {
         $('#IdenticalStringsAllow').prop('checked', false);
         $('#generated-strings').html('');
     });
+
+    $('#history').click(function () {
+       $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GenerateStrings", "Home")',
+                contentType: false,
+                processData:false,
+                success: function (response) {
+                    // Handle successful response
+                    var generatedStringsHtml = '<h2>Generated Strings:</h2><ul>';
+                    response.forEach(function (str) {
+                        generatedStringsHtml += '<li>' + str + '</li>';
+                    });
+                    generatedStringsHtml += '</ul>';
+                    $('#generated-strings').html(generatedStringsHtml);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+    });
+
 </script>
 

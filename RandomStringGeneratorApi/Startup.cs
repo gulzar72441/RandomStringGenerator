@@ -38,7 +38,7 @@ namespace RandomStringGeneratorApi
                                .AllowAnyHeader();
                     });
             });
-            services.AddDbContext<RandomStringContext>(option => option.UseSqlServer(@"Data Source=DESKTOP-ETFG6M5\MSSQLSERVER01;Initial Catalog=RandomStringDB;Integrated Security=True"));
+            services.AddDbContext<RandomStringContext>(option => option.UseSqlServer(@"Data Source=DESKTOP-ETFG6M5\MSSQLSERVER01;Initial Catalog=RandomDB;Integrated Security=True"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
